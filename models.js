@@ -20,3 +20,8 @@ const ProjectSchema = new Schema({
 
 const Issue = mongoose.model("Issue", IssueSchema)
 const Project = mongoose.model("Project", ProjectSchema)
+
+module.exports = {
+    Issue,
+    Project
+}
