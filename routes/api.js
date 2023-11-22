@@ -25,7 +25,6 @@ module.exports = function (app) {
     
         if (!projectExist) {
           const createProject = await Project.create({ name: project });
-          // console.log('Created project:', createProject); 
           res.status(200).json(createProject);
         }
 
