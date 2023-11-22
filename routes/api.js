@@ -15,19 +15,39 @@ module.exports = function (app) {
       let project = req.params.project;
       
       const { issue_title, issue_text, created_by, assigned_to, status_text } = req.body;
+   
+      if(!issue_title || !issue_text || !created_by) {
+        return res.json({ error: 'required field(s) missing' })
+      } 
+
+      try {
+        const projectExist = await Project.findOne({ name: project });
     
-      const projectExist = await Project.findOne({ name: project });
-    
-      console.log('project exist', projectExist); // Corrected syntax
-    
-      console.log('project', project); // Moved this console.log before the conditional check
-    
-      if (!projectExist) {
-        const createProject = await Project.create({ name: project });
-        console.log('Created project:', createProject); // Log the created project
-        res.status(200).json(createProject);
-        return
+        if (!projectExist) {
+          const createProject = await Project.create({ name: project });
+          // console.log('Created project:', createProject); 
+          res.status(200).json(createProject);
+        }
+
+        const issue  = await Issue.create({
+          issue_text,
+          issue_title,
+          created_by,
+          projectId: projectExist._id,
+          assigned_to: assigned_to || "",
+          status_text: status_text || "",
+          created_on: new Date(),
+          updated_on: new Date(),
+          open: true
+        })
+
+        res.status(200).json(issue);
+
+      } catch (err) {
+        console.warn(err);
+        res.status(500).json({ error: err })
       }
+      
     
     })
     
