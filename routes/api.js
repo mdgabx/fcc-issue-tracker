@@ -75,9 +75,13 @@ module.exports = function (app) {
       const { _id, issue_title, issue_text, created_by, assigned_to, status_text, open } = req.body
       let project = req.params.project;
 
+      if(!_id) {
+        return res.json({ error: 'missing _id' })
+      }
+
       try {
 
-        const updateIssue = await Issue.findByIdAndUpdate(
+        await Issue.findByIdAndUpdate(
           _id, 
         {
           issue_title,
