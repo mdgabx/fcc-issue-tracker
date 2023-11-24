@@ -109,9 +109,31 @@ module.exports = function (app) {
       }
     })
     
-    .delete(function (req, res){
+    .delete(async (req, res) => {
       let project = req.params.project;
+
+      const { _id } = req.body
+
+      if(!_id) {
+        res.json({ error: 'missing _id' })
+      }
+
       
+      try {
+
+        const deletedIssue = await Issue.findByIdAndDelete(_id)
+
+        if(!deletedIssue) {
+          res.json({ error: 'could not delete', '_id': _id })
+        }
+
+        res.json({ result: 'successfully deleted', '_id': _id })
+
+      } catch (err) {
+        res.json({ error: `Server error: ${err}` })
+      }
+
+    
     });
     
 };
