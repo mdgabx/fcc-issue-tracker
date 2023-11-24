@@ -132,8 +132,6 @@ module.exports = function (app) {
       } catch (err) {
         res.json({ error: `Server error: ${err}` })
       }
-
-    
     });
     
 };
