@@ -71,8 +71,31 @@ module.exports = function (app) {
       }
     })
     
-    .put(function (req, res){
+    .put(async (req, res) => {
+      const { _id, issue_title, issue_text, created_by, assigned_to, status_text, open } = req.body
       let project = req.params.project;
+
+      try {
+
+        const updateIssue = await Issue.findByIdAndUpdate(
+          _id, 
+        {
+          issue_title,
+          issue_text,
+          created_by,
+          assigned_to,
+          status_text,
+          open,
+          updated_on: new Date()
+        },
+        { new: true }
+      );
+
+      res.json({  result: 'successfully updated', '_id': _id });
+
+      } catch (err) {
+        res.json({ error: `Server Error: ${err}` })
+      }     
       
     })
     
