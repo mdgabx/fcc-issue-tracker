@@ -72,35 +72,41 @@ module.exports = function (app) {
     })
     
     .put(async (req, res) => {
-      const { _id, issue_title, issue_text, created_by, assigned_to, status_text, open } = req.body
-      let project = req.params.project;
-
-      if(!_id) {
-        return res.json({ error: 'missing _id' })
+      const { _id, issue_title, issue_text, created_by, assigned_to, status_text, open } = req.body;
+      const project = req.params.project;
+    
+      if (!_id) {
+        return res.json({ error: 'missing _id' });
       }
-
+    
+      if (!issue_title && !issue_text && !created_by && !assigned_to && !status_text) {
+        return res.json({ error: 'no update field(s) sent', _id });
+      }
+    
       try {
-
-        await Issue.findByIdAndUpdate(
-          _id, 
-        {
-          issue_title,
-          issue_text,
-          created_by,
-          assigned_to,
-          status_text,
-          open,
-          updated_on: new Date()
-        },
-        { new: true }
-      );
-
-      res.json({  result: 'successfully updated', '_id': _id });
-
+        const updatedIssue = await Issue.findByIdAndUpdate(
+          _id,
+          {
+            issue_title,
+            issue_text,
+            created_by,
+            assigned_to,
+            status_text,
+            open,
+            updated_on: new Date()
+          },
+          { new: true }
+        );
+    
+        if (!updatedIssue) {
+          return res.json({ error: 'could not update', _id });
+        }
+    
+        res.json({ result: 'successfully updated', _id });
+    
       } catch (err) {
-        res.json({ error: `Server Error: ${err}` })
-      }     
-      
+        res.status(500).json({ error: `Server Error: ${err.message}` });
+      }
     })
     
     .delete(function (req, res){
