@@ -32,7 +32,7 @@ suite('Functional Tests', function() {
 
                 done();
             });
-    }).timedOut(10000);
+    }).timeout(10000);
 
     test('Create an issue with only required fields: POST request to /api/issues/{project}', function(done) {
         const sampleIssue = {
@@ -57,6 +57,25 @@ suite('Functional Tests', function() {
 
     test("Create an issue with missing required fields: POST request to /api/issues/{project}", function(done) {
         
+        const sampleIssue = {
+            issue_title: "",
+            issue_text: "",
+            created_by: "",
+            open: true,
+            assigned_to: "Yoko",
+            status_text: "not yet completed"
+        }
+
+        chai.request(server)
+            .post('/api/issue/testingEnv')
+            .send(sampleIssue)
+            .end(function (err, res) {
+                assert.equal(res.status, 404)
+                assert.equal(res.body.error, undefined)
+
+                done();
+            });
+
     });
 
   })
