@@ -118,7 +118,6 @@ module.exports = function (app) {
         res.json({ error: 'missing _id' })
       }
 
-      
       try {
 
         const deletedIssue = await Issue.findByIdAndDelete(_id)
