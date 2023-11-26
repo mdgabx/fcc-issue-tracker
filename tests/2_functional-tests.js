@@ -31,7 +31,7 @@ suite('Functional Tests', function() {
                 assert.property(res.body, "status_text")
 
                 done();
-            });
+            })
     }).timeout(10000)
 
     test('Create an issue with only required fields: POST request to /api/issues/{project}', function(done) {
@@ -109,6 +109,23 @@ suite('Functional Tests', function() {
 
                 done();
             })
+    }).timeout(10000)
+
+    test("View issues on a project with multiple filters: GET request to /api/issues/{project}", function(done) {
+        chai.request(server)
+            .get('/api/issues/testingEnv')
+            .query({ open: true, assigned_to: "Yoko" })
+            .end(function (err, res) {
+                assert.equal(res.status, 200)
+                assert.isArray(res.body, 'response should be an array')
+
+               if(res.body.length > 0) {
+                    assert.property(res.body[0], "open", "Issue open method should exist")
+                    assert.property(res.body[0], "assigned_to", "Issue assigned_to should exist")
+                }
+            
+                done();
+            })
+        }).timeout(10000)
     })
-  }).timeout(5000)
 });
