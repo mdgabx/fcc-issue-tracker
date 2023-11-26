@@ -210,6 +210,28 @@ suite('Functional Tests', function() {
 
                     done()
                 })
-        })
+        }).timeout(5000)
+
+        test("Update an issue with an invalid _id: PUT request to /api/issues/{project}", function (done) {
+            const sampleIssue = {
+                _id: "655dde403testId",
+                issue_title: "multiple update fields",
+                issue_text: "test multiple updates api",
+                created_by: "Do'Urden",
+                assigned_to: "Mark",
+                open: true,
+                status_text: "on-going"
+            }
+
+            chai.request(server)
+                .put('/api/issues/testingEnv')
+                .send(sampleIssue)
+                .end(function(err, res) {
+                    assert.equal(res.status, 500)
+                    assert.equal(res.body._id, undefined)
+
+                    done();
+                })
+        }).timeout(5000)
     })
 });
