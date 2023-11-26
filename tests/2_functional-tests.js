@@ -144,5 +144,72 @@ suite('Functional Tests', function() {
                 })
         }).timeout(10000)
 
+        test("Update multiple fields on an issue: PUT request to /api/issues/{project}", function (done) {
+            const sampleIssue = {
+                _id: "655dde403c77ed29e0c96ea6",
+                issue_title: "multiple update fields",
+                issue_text: "test multiple updates api",
+                created_by: "Do'Urden",
+                assigned_to: "Mark",
+                open: true,
+                status_text: "on-going"
+            }
+
+            chai.request(server)
+                .put('/api/issues/testingEnv')
+                .send(sampleIssue)
+                .end(function (err, res) {
+                    assert.equal(res.status, 200)   
+                    assert.equal(res.body._id, sampleIssue._id)
+
+                    done()
+                })
+
+        }).timeout(5000)
+
+        test("Update an issue with missing _id: PUT request to /api/issues/{project}", function(done) {
+            const sampleIssue = {
+                issue_title: "multiple update fields",
+                issue_text: "test multiple updates api",
+                created_by: "Do'Urden",
+                assigned_to: "Mark",
+                open: true,
+                status_text: "on-going"
+            }
+
+            chai.request(server)
+                .put('/api/issues/testingEnv')
+                .send(sampleIssue)
+                .end(function (err, res) {
+                    assert.equal(res.body._id, undefined) 
+                    assert.equal(res.body.error, "missing _id") 
+
+                    done()
+                })
+
+
+        }).timeout(10000)
+
+        test("Update an issue with no fields to update: PUT request to /api/issues/{project}", function(done) {
+            const sampleIssue = {
+                _id: "655dde403c77ed29e0c96ea6",
+                issue_title: "multiple update fields",
+                issue_text: "test multiple updates api",
+                created_by: "Do'Urden",
+                assigned_to: "Mark",
+                open: true,
+                status_text: "on-going"
+            }
+
+            chai.request(server)
+                .put('/api/issues/testingEnv')
+                .send(sampleIssue)
+                .end(function (err, res) {
+                    assert.equal(res.body.error, "could not update")
+                    assert.equal(res.body._id, sampleIssue._id)
+
+                    done()
+                })
+        })
     })
 });
