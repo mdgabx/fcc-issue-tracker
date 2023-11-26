@@ -32,7 +32,7 @@ suite('Functional Tests', function() {
 
                 done();
             });
-    }).timeout(10000);
+    }).timeout(10000)
 
     test('Create an issue with only required fields: POST request to /api/issues/{project}', function(done) {
         const sampleIssue = {
@@ -52,7 +52,7 @@ suite('Functional Tests', function() {
 
                 done()
             });
-    });
+    }).timeout(10000)
 
 
     test("Create an issue with missing required fields: POST request to /api/issues/{project}", function(done) {
@@ -75,8 +75,40 @@ suite('Functional Tests', function() {
 
                 done();
             });
+    }).timeout(10000)
 
-    });
+    test("View issues on a project: GET request to /api/issues/{project}", function (done) {
+        chai.request(server)
+            .get('/api/issues/testingEnv')
+            .end(function (err, res) {
+                assert.equal(res.status, 200)
 
-  })
+                assert.isArray(res.body, 'response should be an array')
+                if (res.body.length > 0) {
+                    assert.property(res.body[0], 'issue_title', 'Issue should have title');
+                    assert.property(res.body[0], 'issue_text', 'Issue should have text');
+                    assert.property(res.body[0], 'created_by', 'Issue should have creator');
+                    assert.property(res.body[0], 'open', 'Issue should have an open field');
+                  }
+
+                done();
+            })
+    }).timeout(10000)
+
+    test("View issues on a project with one filter: GET request to /api/issues/{project}", function(done) {
+        chai.request(server)
+            .get('/api/issues/testingEnv')
+            .query({ open: true })
+            .end(function (err, res) {
+                assert.equal(res.status, 200)
+                assert.isArray(res.body, 'response should be an array')
+                
+                if(res.body.length > 0) {
+                    assert.equal(res.body[0].open, true)
+                }
+
+                done();
+            })
+    })
+  }).timeout(5000)
 });

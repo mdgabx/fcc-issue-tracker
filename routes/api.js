@@ -115,7 +115,7 @@ module.exports = function (app) {
       const { _id } = req.body
 
       if(!_id) {
-        res.json({ error: 'missing _id' })
+       return res.json({ error: 'missing _id' })
       }
 
       try {
@@ -123,7 +123,7 @@ module.exports = function (app) {
         const deletedIssue = await Issue.findByIdAndDelete(_id)
 
         if(!deletedIssue) {
-          res.json({ error: 'could not delete', '_id': _id })
+         return res.json({ error: 'could not delete', '_id': _id })
         }
 
         res.json({ result: 'successfully deleted', '_id': _id })
