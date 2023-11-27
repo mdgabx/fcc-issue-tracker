@@ -186,8 +186,6 @@ suite('Functional Tests', function() {
 
                     done()
                 })
-
-
         }).timeout(10000)
 
         test("Update an issue with no fields to update: PUT request to /api/issues/{project}", function(done) {
@@ -233,5 +231,54 @@ suite('Functional Tests', function() {
                     done();
                 })
         }).timeout(5000)
+
+        test("Delete an issue: DELETE request to /api/issues/{project}", function(done) {
+
+            const sampleIssue = {
+                _id: "655de3e062bd244d731544c4"
+            }
+
+            chai.request(server)
+                .delete('/api/issues/testingEnv')
+                .send(sampleIssue)
+                .end(function (err, res) {
+                    assert.equal(res.status, 200)
+                    assert.equal(res.body._id, sampleIssue._id)
+
+                    done()
+                })
+        }).timeout(5000)
+
+        test("Delete an issue with an invalid _id: DELETE request to /api/issues/{project}", function (done) {
+            const sampleIssue = {
+                _id: "1122"
+            }
+
+            chai.request(server)
+                .delete('/api/issues/testingEnv')
+                .send(sampleIssue)
+                .end(function(err, res) {
+                    assert.equal(res.status, 200)
+                    assert.property(res.body, "error")
+            
+                    done()
+                })
+        }).timeout(10000)
+
+        test("Delete an issue with missing _id: DELETE request to /api/issues/{project}", function(done) {
+            const sampleIssue = {
+                _id: ""
+            }
+
+            chai.request(server)
+                .delete('/api/issues/testingEnv')
+                .send(sampleIssue)
+                .end(function (err, res) {
+                    assert.equal(res.status, 200)
+                    assert.equal(res.body.error, "missing _id")
+
+                    done();
+                })
+        })
     })
 });
