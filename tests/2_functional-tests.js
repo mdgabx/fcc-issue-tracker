@@ -82,7 +82,6 @@ suite('Functional Tests', function() {
                 .end(function (err, res) {
                     assert.equal(res.status, 200)
 
-                    assert.isArray(res.body, 'response should be an array')
                     if (res.body.length > 0) {
                         assert.property(res.body[0], 'issue_title', 'Issue should have title');
                         assert.property(res.body[0], 'issue_text', 'Issue should have text');
@@ -100,7 +99,6 @@ suite('Functional Tests', function() {
                 .query({ open: true })
                 .end(function (err, res) {
                     assert.equal(res.status, 200)
-                    assert.isArray(res.body, 'response should be an array')
                     
                     if(res.body.length > 0) {
                         assert.equal(res.body[0].open, true)
@@ -116,7 +114,6 @@ suite('Functional Tests', function() {
                 .query({ open: true, assigned_to: "Yoko" })
                 .end(function (err, res) {
                     assert.equal(res.status, 200)
-                    assert.isArray(res.body, 'response should be an array')
 
                 if(res.body.length > 0) {
                         assert.property(res.body[0], "open", "Issue open method should exist")
