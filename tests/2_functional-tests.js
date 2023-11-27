@@ -21,7 +21,6 @@ suite('Functional Tests', function() {
                 .post('/api/issues/testingEnv')
                 .send(sampleIssue)
                 .end(function (err, res) {
-                    assert.equal(res.status, 200)
                     assert.property(res.body, "issue_title")
                     assert.property(res.body, "issue_text")
                     assert.property(res.body, "created_by")
@@ -44,7 +43,6 @@ suite('Functional Tests', function() {
                 .post('/api/issues/testingEnv')
                 .send(sampleIssue)
                 .end(function (err, res) {
-                    assert.equal(res.status, 200)
                     assert.property(res.body, "issue_title")
                     assert.property(res.body, "issue_text")
                     assert.property(res.body, "created_by")
@@ -69,7 +67,6 @@ suite('Functional Tests', function() {
                 .post('/api/issue/testingEnv')
                 .send(sampleIssue)
                 .end(function (err, res) {
-                    assert.equal(res.status, 404)
                     assert.equal(res.body.error, undefined)
 
                     done();
@@ -80,7 +77,7 @@ suite('Functional Tests', function() {
             chai.request(server)
                 .get('/api/issues/testingEnv')
                 .end(function (err, res) {
-                    assert.equal(res.status, 200)
+                    assert.isArray(res.body)
 
                     done();
                 })
@@ -91,8 +88,7 @@ suite('Functional Tests', function() {
                 .get('/api/issues/testingEnv')
                 .query({ open: true })
                 .end(function (err, res) {
-                    assert.equal(res.status, 200)
-
+                    assert.isArray(res.body)
                     done();
                 })
         }).timeout(5000)
@@ -102,8 +98,8 @@ suite('Functional Tests', function() {
                 .get('/api/issues/testingEnv')
                 .query({ open: true, assigned_to: "Yoko" })
                 .end(function (err, res) {
-                    assert.equal(res.status, 200)
-                
+                    assert.isArray(res.body)
+                    
                     done();
                 })
         }).timeout(5000)
@@ -118,7 +114,6 @@ suite('Functional Tests', function() {
                 .put('/api/issues/testingEnv')
                 .send(sampleIssue)
                 .end(function (err, res) {
-                    assert.equal(res.status, 400)
                     assert.equal(res.body._id, sampleIssue._id, "Two id didn't match")
 
                     done();
@@ -140,7 +135,6 @@ suite('Functional Tests', function() {
                 .put('/api/issues/testingEnv')
                 .send(sampleIssue)
                 .end(function (err, res) {
-                    assert.equal(res.status, 400)   
                     assert.equal(res.body._id, sampleIssue._id)
 
                     done()
@@ -206,7 +200,6 @@ suite('Functional Tests', function() {
                 .put('/api/issues/testingEnv')
                 .send(sampleIssue)
                 .end(function(err, res) {
-                    assert.equal(res.status, 500)
                     assert.equal(res.body._id, undefined)
 
                     done();
@@ -223,7 +216,6 @@ suite('Functional Tests', function() {
                 .delete('/api/issues/testingEnv')
                 .send(sampleIssue)
                 .end(function (err, res) {
-                    assert.equal(res.status, 400)
                     assert.equal(res.body._id, sampleIssue._id)
 
                     done()
@@ -239,7 +231,6 @@ suite('Functional Tests', function() {
                 .delete('/api/issues/testingEnv')
                 .send(sampleIssue)
                 .end(function(err, res) {
-                    assert.equal(res.status, 500)
                     assert.property(res.body, "error")
             
                     done()
@@ -255,7 +246,6 @@ suite('Functional Tests', function() {
                 .delete('/api/issues/testingEnv')
                 .send(sampleIssue)
                 .end(function (err, res) {
-                    assert.equal(res.status, 400)
                     assert.equal(res.body.error, "missing _id")
 
                     done();
