@@ -14,22 +14,21 @@ module.exports = function (app) {
         let projectFound = await Project.findOne({ name: project });
       
         if (!projectFound) {
-          return res.json({error: `project ${project} not found`})
+          return res.status(400).json({error: `project ${project} not found`})
         } else {
           const issuesUnderProject = await Issue.find({ projectId: projectFound._id,
             ...req.query,
           });
           
           if(!issuesUnderProject) {
-            res.json({error: `No issues under this project as of this moment`})
+            res.status(400).json({error: `No issues under this project as of this moment`})
           } else {
-            res.json(issuesUnderProject);
+            res.status(200).json(issuesUnderProject);
           }
         }
 
       } catch (err) {
-        console.error(err);
-        res.json({ error: 'Server error' });
+        res.status(500).json({ error: 'Server error' });
       }
 
     })
@@ -40,7 +39,7 @@ module.exports = function (app) {
       const { issue_title, issue_text, created_by, assigned_to, status_text } = req.body;
    
       if(!issue_title || !issue_text || !created_by) {
-        return res.json({ error: 'required field(s) missing' })
+        return res.status(400).json({ error: 'required field(s) missing' })
       } 
 
       try {
@@ -63,11 +62,11 @@ module.exports = function (app) {
           open: true
         })
 
-        res.json(issue);
+        res.status(200).json(issue);
 
       } catch (err) {
         console.warn(err);
-        res.json({ error: err })
+        res.status(500).json({ error: err })
       }
     })
     
@@ -76,11 +75,11 @@ module.exports = function (app) {
       const project = req.params.project;
     
       if (!_id) {
-        return res.json({ error: 'missing _id' });
+        return res.status(400).json({ error: 'missing _id' });
       }
     
       if (!issue_title && !issue_text && !created_by && !assigned_to && !status_text) {
-        return res.json({ error: 'no update field(s) sent', _id });
+        return res.status(400).json({ error: 'no update field(s) sent', _id });
       }
     
       try {
@@ -99,10 +98,10 @@ module.exports = function (app) {
         );
     
         if (!updatedIssue) {
-          return res.json({ error: 'could not update', _id });
+          return res.status(400).json({ error: 'could not update', _id });
         }
     
-        res.json({ result: 'successfully updated', _id });
+        res.status(200).json({ result: 'successfully updated', _id });
     
       } catch (err) {
         res.status(500).json({ error: `Server Error: ${err.message}` });
@@ -115,7 +114,7 @@ module.exports = function (app) {
       const { _id } = req.body
 
       if(!_id) {
-       return res.json({ error: 'missing _id' })
+       return res.status(400).json({ error: 'missing _id' })
       }
 
       try {
@@ -123,13 +122,13 @@ module.exports = function (app) {
         const deletedIssue = await Issue.findByIdAndDelete(_id)
 
         if(!deletedIssue) {
-         return res.json({ error: 'could not delete', '_id': _id })
+         return res.status(400).json({ error: 'could not delete', '_id': _id })
         }
 
-        res.json({ result: 'successfully deleted', '_id': _id })
+        res.status(200).json({ result: 'successfully deleted', '_id': _id })
 
       } catch (err) {
-        res.json({ error: `Server error: ${err}` })
+        res.status(500).json({ error: `Server error: ${err}` })
       }
     });
     

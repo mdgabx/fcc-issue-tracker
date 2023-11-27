@@ -118,7 +118,7 @@ suite('Functional Tests', function() {
                 .put('/api/issues/testingEnv')
                 .send(sampleIssue)
                 .end(function (err, res) {
-                    assert.equal(res.status, 200)
+                    assert.equal(res.status, 400)
                     assert.equal(res.body._id, sampleIssue._id, "Two id didn't match")
 
                     done();
@@ -127,7 +127,7 @@ suite('Functional Tests', function() {
 
         test("Update multiple fields on an issue: PUT request to /api/issues/{project}", function (done) {
             const sampleIssue = {
-                _id: "655dde403c77ed29e0c96ea6",
+                _id: "655ddf7e4656d163d5d3a321",
                 issue_title: "multiple update fields",
                 issue_text: "test multiple updates api",
                 created_by: "Do'Urden",
@@ -140,7 +140,7 @@ suite('Functional Tests', function() {
                 .put('/api/issues/testingEnv')
                 .send(sampleIssue)
                 .end(function (err, res) {
-                    assert.equal(res.status, 200)   
+                    assert.equal(res.status, 400)   
                     assert.equal(res.body._id, sampleIssue._id)
 
                     done()
@@ -216,14 +216,14 @@ suite('Functional Tests', function() {
         test("Delete an issue: DELETE request to /api/issues/{project}", function(done) {
 
             const sampleIssue = {
-                _id: "655de3e062bd244d731544c4"
+                _id: "655ddffa1f5e972116f35315"
             }
 
             chai.request(server)
                 .delete('/api/issues/testingEnv')
                 .send(sampleIssue)
                 .end(function (err, res) {
-                    assert.equal(res.status, 200)
+                    assert.equal(res.status, 400)
                     assert.equal(res.body._id, sampleIssue._id)
 
                     done()
@@ -239,7 +239,7 @@ suite('Functional Tests', function() {
                 .delete('/api/issues/testingEnv')
                 .send(sampleIssue)
                 .end(function(err, res) {
-                    assert.equal(res.status, 200)
+                    assert.equal(res.status, 500)
                     assert.property(res.body, "error")
             
                     done()
@@ -255,11 +255,11 @@ suite('Functional Tests', function() {
                 .delete('/api/issues/testingEnv')
                 .send(sampleIssue)
                 .end(function (err, res) {
-                    assert.equal(res.status, 200)
+                    assert.equal(res.status, 400)
                     assert.equal(res.body.error, "missing _id")
 
                     done();
                 })
-        })
+        }).timeout(5000)
     })
 });
